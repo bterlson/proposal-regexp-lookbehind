@@ -1,0 +1,696 @@
+<!doctype html>
+<head><meta charset="utf-8">
+<title>RegExp Lookbehind Assertions</title><script type="application/json" id="menu-search-biblio">[{"type":"clause","id":"sec-introduction","aoid":null,"title":"Introduction","titleHTML":"Introduction","number":"1","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Introduction"},{"type":"production","id":"prod-Pattern","name":"Pattern","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Pattern"},{"type":"production","id":"prod-Disjunction","name":"Disjunction","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Disjunction"},{"type":"production","id":"prod-Alternative","name":"Alternative","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Alternative"},{"type":"production","id":"prod-Term","name":"Term","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Term"},{"type":"production","id":"prod-Assertion","name":"Assertion","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Assertion"},{"type":"production","id":"prod-Quantifier","name":"Quantifier","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Quantifier"},{"type":"production","id":"prod-QuantifierPrefix","name":"QuantifierPrefix","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"QuantifierPrefix"},{"type":"production","id":"prod-Atom","name":"Atom","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Atom"},{"type":"production","id":"prod-SyntaxCharacter","name":"SyntaxCharacter","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"SyntaxCharacter"},{"type":"production","id":"prod-PatternCharacter","name":"PatternCharacter","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"PatternCharacter"},{"type":"production","id":"prod-AtomEscape","name":"AtomEscape","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"AtomEscape"},{"type":"production","id":"prod-CharacterEscape","name":"CharacterEscape","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"CharacterEscape"},{"type":"production","id":"prod-ControlEscape","name":"ControlEscape","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"ControlEscape"},{"type":"production","id":"prod-ControlLetter","name":"ControlLetter","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"ControlLetter"},{"type":"production","id":"prod-RegExpUnicodeEscapeSequence","name":"RegExpUnicodeEscapeSequence","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"RegExpUnicodeEscapeSequence"},{"type":"production","id":"prod-LeadSurrogate","name":"LeadSurrogate","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"LeadSurrogate"},{"type":"production","id":"prod-TrailSurrogate","name":"TrailSurrogate","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"TrailSurrogate"},{"type":"production","id":"prod-NonSurrogate","name":"NonSurrogate","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"NonSurrogate"},{"type":"production","id":"prod-IdentityEscape","name":"IdentityEscape","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"IdentityEscape"},{"type":"production","id":"prod-DecimalEscape","name":"DecimalEscape","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"DecimalEscape"},{"type":"production","id":"prod-CharacterClassEscape","name":"CharacterClassEscape","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"CharacterClassEscape"},{"type":"production","id":"prod-CharacterClass","name":"CharacterClass","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"CharacterClass"},{"type":"production","id":"prod-ClassRanges","name":"ClassRanges","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"ClassRanges"},{"type":"production","id":"prod-NonemptyClassRanges","name":"NonemptyClassRanges","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"NonemptyClassRanges"},{"type":"production","id":"prod-NonemptyClassRangesNoDash","name":"NonemptyClassRangesNoDash","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"NonemptyClassRangesNoDash"},{"type":"production","id":"prod-ClassAtom","name":"ClassAtom","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"ClassAtom"},{"type":"production","id":"prod-ClassAtomNoDash","name":"ClassAtomNoDash","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"ClassAtomNoDash"},{"type":"production","id":"prod-ClassEscape","name":"ClassEscape","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"ClassEscape"},{"type":"clause","id":"sec-patternsyntax","aoid":null,"title":"Pattern Syntax","titleHTML":"Pattern Syntax","number":"2","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Pattern Syntax"},{"type":"clause","id":"sec-pattern","aoid":null,"title":"Pattern","titleHTML":"Pattern","number":"3.1","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Pattern"},{"type":"clause","id":"sec-disjunction","aoid":null,"title":"Disjunction","titleHTML":"Disjunction","number":"3.2","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Disjunction"},{"type":"clause","id":"sec-alternative","aoid":null,"title":"Alternative","titleHTML":"Alternative","number":"3.3","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Alternative"},{"type":"op","aoid":"RepeatMatcher","refId":"sec-runtime-semantics-repeatmatcher-abstract-operation","location":"","key":"RepeatMatcher"},{"type":"clause","id":"sec-runtime-semantics-repeatmatcher-abstract-operation","aoid":"RepeatMatcher","title":"Runtime Semantics: RepeatMatcher Abstract Operation","titleHTML":"Runtime Semantics: RepeatMatcher Abstract Operation","number":"3.4.1","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Runtime Semantics: RepeatMatcher Abstract Operation"},{"type":"clause","id":"sec-term","aoid":null,"title":"Term","titleHTML":"Term","number":"3.4","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Term"},{"type":"op","aoid":"WordCharacters","refId":"sec-runtime-semantics-wordcharacters-abstract-operation","location":"","key":"WordCharacters"},{"type":"clause","id":"sec-runtime-semantics-wordcharacters-abstract-operation","aoid":"WordCharacters","title":"Runtime Semantics: WordCharacters Abstract Operation","titleHTML":"Runtime Semantics: WordCharacters Abstract Operation","number":"3.5.1","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Runtime Semantics: WordCharacters Abstract Operation"},{"type":"op","aoid":"IsWordChar","refId":"sec-runtime-semantics-iswordchar-abstract-operation","location":"","key":"IsWordChar"},{"type":"clause","id":"sec-runtime-semantics-iswordchar-abstract-operation","aoid":"IsWordChar","title":"Runtime Semantics: IsWordChar Abstract Operation","titleHTML":"Runtime Semantics: IsWordChar Abstract Operation","number":"3.5.2","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Runtime Semantics: IsWordChar Abstract Operation"},{"type":"clause","id":"sec-assertion","aoid":null,"title":"Assertion","titleHTML":"Assertion","number":"3.5","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Assertion"},{"type":"op","aoid":"CharacterSetMatcher","refId":"sec-runtime-semantics-charactersetmatcher-abstract-operation","location":"","key":"CharacterSetMatcher"},{"type":"clause","id":"sec-runtime-semantics-charactersetmatcher-abstract-operation","aoid":"CharacterSetMatcher","title":"Runtime Semantics: CharacterSetMatcher Abstract Operation","titleHTML":"Runtime Semantics: CharacterSetMatcher Abstract Operation","number":"3.6.1","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Runtime Semantics: CharacterSetMatcher Abstract Operation"},{"type":"op","aoid":"Canonicalize","refId":"sec-runtime-semantics-canonicalize-ch","location":"","key":"Canonicalize"},{"type":"clause","id":"sec-runtime-semantics-canonicalize-ch","aoid":"Canonicalize","title":"Runtime Semantics: Canonicalize ( ch )","titleHTML":"Runtime Semantics: Canonicalize ( <var>ch</var> )","number":"3.6.2","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Runtime Semantics: Canonicalize ( ch )"},{"type":"clause","id":"sec-atom","aoid":null,"title":"Atom","titleHTML":"Atom","number":"3.6","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Atom"},{"type":"clause","id":"sec-atomescape","aoid":null,"title":"AtomEscape","titleHTML":"AtomEscape","number":"3.7","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"AtomEscape"},{"type":"clause","id":"sec-patternsemantics","aoid":null,"title":"Pattern Semantics","titleHTML":"Pattern Semantics","number":"3","namespace":"https://github.com/littledan/proposal-regexp-lookbehind","location":"","key":"Pattern Semantics"}]</script></head><body><div id="menu-toggle">☰</div><div id="menu-spacer"></div><div id="menu"><div id="menu-search"><input type="text" id="menu-search-box" placeholder="Search..."><div id="menu-search-results" class="inactive"></div></div><div id="menu-pins"><div class="menu-pane-header">Pinned Clauses</div><ul id="menu-pins-list"></ul></div><div class="menu-pane-header">Table of Contents</div><div id="menu-toc"><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-introduction" title="Introduction"><span class="secnum">1</span> Introduction</a></li><li><span class="item-toggle-none"></span><a href="#sec-patternsyntax" title="Pattern Syntax"><span class="secnum">2</span> Pattern Syntax</a></li><li><span class="item-toggle">◢</span><a href="#sec-patternsemantics" title="Pattern Semantics"><span class="secnum">3</span> Pattern Semantics</a><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-pattern" title="Pattern"><span class="secnum">3.1</span> Pattern</a></li><li><span class="item-toggle-none"></span><a href="#sec-disjunction" title="Disjunction"><span class="secnum">3.2</span> Disjunction</a></li><li><span class="item-toggle-none"></span><a href="#sec-alternative" title="Alternative"><span class="secnum">3.3</span> Alternative</a></li><li><span class="item-toggle">◢</span><a href="#sec-term" title="Term"><span class="secnum">3.4</span> Term</a><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-runtime-semantics-repeatmatcher-abstract-operation" title="Runtime Semantics: RepeatMatcher Abstract Operation"><span class="secnum">3.4.1</span> RS: RepeatMatcher Abstract Operation</a></li></ol></li><li><span class="item-toggle">◢</span><a href="#sec-assertion" title="Assertion"><span class="secnum">3.5</span> Assertion</a><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-runtime-semantics-wordcharacters-abstract-operation" title="Runtime Semantics: WordCharacters Abstract Operation"><span class="secnum">3.5.1</span> RS: WordCharacters Abstract Operation</a></li><li><span class="item-toggle-none"></span><a href="#sec-runtime-semantics-iswordchar-abstract-operation" title="Runtime Semantics: IsWordChar Abstract Operation"><span class="secnum">3.5.2</span> RS: IsWordChar Abstract Operation</a></li></ol></li><li><span class="item-toggle">◢</span><a href="#sec-atom" title="Atom"><span class="secnum">3.6</span> Atom</a><ol class="toc"><li><span class="item-toggle-none"></span><a href="#sec-runtime-semantics-charactersetmatcher-abstract-operation" title="Runtime Semantics: CharacterSetMatcher Abstract Operation"><span class="secnum">3.6.1</span> RS: CharacterSetMatcher Abstract Operation</a></li><li><span class="item-toggle-none"></span><a href="#sec-runtime-semantics-canonicalize-ch" title="Runtime Semantics: Canonicalize ( ch )"><span class="secnum">3.6.2</span> RS: Canonicalize ( <var>ch</var> )</a></li></ol></li><li><span class="item-toggle-none"></span><a href="#sec-atomescape" title="AtomEscape"><span class="secnum">3.7</span> AtomEscape</a></li></ol></li></ol></div></div><div id="spec-container"><h1 class="version">Stage 2 Draft / December 14, 2016</h1><h1 class="title">RegExp Lookbehind Assertions</h1>
+<script src="ecmarkup.js" defer=""></script>
+<link rel="stylesheet" href="ecmarkup.css">
+
+<emu-clause id="sec-introduction">
+  <h1><span class="secnum">1</span>Introduction<span class="utils"><span class="anchor"><a href="#sec-introduction">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+  <emu-import href="./introduction.html"><p>Lookarounds are zero-width assertions that match a string without consuming anything. ECMAScript has lookahead
+assertions that does this in forward direction, but the language is missing a way to do this backward which the
+lookbehind assertions provide. With lookbehind assertions, one can make sure that a pattern is or isn't preceded by
+another, e.g. matching a dollar amount without capturing the dollar sign.</p>
+
+<p>See  <a href="https://github.com/littledan/proposal-regexp-lookbehind">the proposal repository</a> for background material and discussion.</p>
+</emu-import>
+</emu-clause>
+
+<emu-clause id="sec-patternsyntax">
+  <h1><span class="secnum">2</span>Pattern Syntax<span class="utils"><span class="anchor"><a href="#sec-patternsyntax">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+  <emu-import href="./syntax.html"><emu-grammar><emu-production name="Pattern" params="U" type="lexical" id="prod-Pattern">
+    <emu-nt params="U"><a href="#prod-Pattern">Pattern</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="a0a70437"><emu-nt params="?U"><a href="#prod-Disjunction">Disjunction</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="Disjunction" params="U" type="lexical" id="prod-Disjunction">
+    <emu-nt params="U"><a href="#prod-Disjunction">Disjunction</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="4b950b56"><emu-nt params="?U"><a href="#prod-Alternative">Alternative</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+    <emu-rhs a="cd9683b1"><emu-nt params="?U"><a href="#prod-Alternative">Alternative</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-t>|</emu-t><emu-nt params="?U"><a href="#prod-Disjunction">Disjunction</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="Alternative" params="U" type="lexical" id="prod-Alternative">
+    <emu-nt params="U"><a href="#prod-Alternative">Alternative</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="37b9c04c"><emu-gann>[empty]</emu-gann></emu-rhs>
+    <emu-rhs a="57d30f89"><emu-nt params="?U"><a href="#prod-Alternative">Alternative</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-nt params="?U"><a href="#prod-Term">Term</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="Term" params="U" type="lexical" id="prod-Term">
+    <emu-nt params="U"><a href="#prod-Term">Term</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="cb49b8ab"><emu-nt params="?U"><a href="#prod-Assertion">Assertion</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+    <emu-rhs a="e670ba7b"><emu-nt params="?U"><a href="#prod-Atom">Atom</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+    <emu-rhs a="5e2e9728"><emu-nt params="?U"><a href="#prod-Atom">Atom</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-nt><a href="#prod-Quantifier">Quantifier</a></emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="Assertion" params="U" type="lexical" id="prod-Assertion">
+    <emu-nt params="U"><a href="#prod-Assertion">Assertion</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="e5878811"><emu-t>^</emu-t></emu-rhs>
+    <emu-rhs a="1262cc92"><emu-t>$</emu-t></emu-rhs>
+    <emu-rhs a="1e228da5"><emu-t>\</emu-t><emu-t>b</emu-t></emu-rhs>
+    <emu-rhs a="a5dc97fa"><emu-t>\</emu-t><emu-t>B</emu-t></emu-rhs>
+    <emu-rhs a="ff1cd060"><emu-t>(</emu-t><emu-t>?</emu-t><emu-t>=</emu-t><emu-nt params="?U"><a href="#prod-Disjunction">Disjunction</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-t>)</emu-t></emu-rhs>
+    <emu-rhs a="61c3834c"><emu-t>(</emu-t><emu-t>?</emu-t><emu-t>!</emu-t><emu-nt params="?U"><a href="#prod-Disjunction">Disjunction</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-t>)</emu-t></emu-rhs><ins class="block">
+    <emu-rhs a="198b256d"><emu-t>(</emu-t><emu-t>?</emu-t><emu-t>&lt;=</emu-t><emu-nt params="?U"><a href="#prod-Disjunction">Disjunction</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-t>)</emu-t></emu-rhs></ins>
+    <ins class="block"><emu-rhs a="32fa3748"><emu-t>(</emu-t><emu-t>?</emu-t><emu-t>&lt;!</emu-t><emu-nt params="?U"><a href="#prod-Disjunction">Disjunction</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-t>)</emu-t></emu-rhs>
+</ins></emu-production>
+<emu-production name="Quantifier" type="lexical" id="prod-Quantifier">
+    <emu-nt><a href="#prod-Quantifier">Quantifier</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="0e588d23"><emu-nt><a href="#prod-QuantifierPrefix">QuantifierPrefix</a></emu-nt></emu-rhs>
+    <emu-rhs a="0b0b5479"><emu-nt><a href="#prod-QuantifierPrefix">QuantifierPrefix</a></emu-nt><emu-t>?</emu-t></emu-rhs>
+</emu-production>
+<emu-production name="QuantifierPrefix" type="lexical" id="prod-QuantifierPrefix">
+    <emu-nt><a href="#prod-QuantifierPrefix">QuantifierPrefix</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="b01e734d"><emu-t>*</emu-t></emu-rhs>
+    <emu-rhs a="e0370b05"><emu-t>+</emu-t></emu-rhs>
+    <emu-rhs a="232d7160"><emu-t>?</emu-t></emu-rhs>
+    <emu-rhs a="68a2b74e"><emu-t>{</emu-t><emu-nt><a href="https://tc39.github.io/ecma262/#prod-DecimalDigits">DecimalDigits</a></emu-nt><emu-t>}</emu-t></emu-rhs>
+    <emu-rhs a="82e97391"><emu-t>{</emu-t><emu-nt><a href="https://tc39.github.io/ecma262/#prod-DecimalDigits">DecimalDigits</a></emu-nt><emu-t>,</emu-t><emu-t>}</emu-t></emu-rhs>
+    <emu-rhs a="f47829c0"><emu-t>{</emu-t><emu-nt><a href="https://tc39.github.io/ecma262/#prod-DecimalDigits">DecimalDigits</a></emu-nt><emu-t>,</emu-t><emu-nt><a href="https://tc39.github.io/ecma262/#prod-DecimalDigits">DecimalDigits</a></emu-nt><emu-t>}</emu-t></emu-rhs>
+</emu-production>
+<emu-production name="Atom" params="U" type="lexical" id="prod-Atom">
+    <emu-nt params="U"><a href="#prod-Atom">Atom</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="beff52c4"><emu-nt><a href="#prod-PatternCharacter">PatternCharacter</a></emu-nt></emu-rhs>
+    <emu-rhs a="9658e473"><emu-t>.</emu-t></emu-rhs>
+    <emu-rhs a="360729b9"><emu-t>\</emu-t><emu-nt params="?U"><a href="#prod-AtomEscape">AtomEscape</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+    <emu-rhs a="72a5dc04"><emu-nt params="?U"><a href="#prod-CharacterClass">CharacterClass</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+    <emu-rhs a="3cf132bc"><emu-t>(</emu-t><emu-nt params="?U"><a href="#prod-Disjunction">Disjunction</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-t>)</emu-t></emu-rhs>
+    <emu-rhs a="a3359f62"><emu-t>(</emu-t><emu-t>?</emu-t><emu-t>:</emu-t><emu-nt params="?U"><a href="#prod-Disjunction">Disjunction</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production>
+<emu-production name="SyntaxCharacter" type="lexical" oneof="" id="prod-SyntaxCharacter">
+    <emu-nt><a href="#prod-SyntaxCharacter">SyntaxCharacter</a></emu-nt><emu-geq>::</emu-geq><emu-oneof>one of</emu-oneof><emu-rhs><emu-t>^</emu-t><emu-t>$</emu-t><emu-t>\</emu-t><emu-t>.</emu-t><emu-t>*</emu-t><emu-t>+</emu-t><emu-t>?</emu-t><emu-t>(</emu-t><emu-t>)</emu-t><emu-t>[</emu-t><emu-t>]</emu-t><emu-t>{</emu-t><emu-t>}</emu-t><emu-t>|</emu-t></emu-rhs>
+</emu-production>
+<emu-production name="PatternCharacter" type="lexical" id="prod-PatternCharacter">
+    <emu-nt><a href="#prod-PatternCharacter">PatternCharacter</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="b94d4da1"><emu-nt><a href="https://tc39.github.io/ecma262/#prod-SourceCharacter">SourceCharacter</a></emu-nt><emu-gmod>but not <emu-nt><a href="#prod-SyntaxCharacter">SyntaxCharacter</a></emu-nt></emu-gmod></emu-rhs>
+</emu-production>
+<emu-production name="AtomEscape" params="U" type="lexical" id="prod-AtomEscape">
+    <emu-nt params="U"><a href="#prod-AtomEscape">AtomEscape</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="7ebff96c"><emu-nt><a href="#prod-DecimalEscape">DecimalEscape</a></emu-nt></emu-rhs>
+    <emu-rhs a="6f05bee4"><emu-nt><a href="#prod-CharacterClassEscape">CharacterClassEscape</a></emu-nt></emu-rhs>
+    <emu-rhs a="4b80816a"><emu-nt params="?U"><a href="#prod-CharacterEscape">CharacterEscape</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="CharacterEscape" params="U" type="lexical" id="prod-CharacterEscape">
+    <emu-nt params="U"><a href="#prod-CharacterEscape">CharacterEscape</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="f88e7170"><emu-nt><a href="#prod-ControlEscape">ControlEscape</a></emu-nt></emu-rhs>
+    <emu-rhs a="a14dae7e"><emu-t>c</emu-t><emu-nt><a href="#prod-ControlLetter">ControlLetter</a></emu-nt></emu-rhs>
+    <emu-rhs a="6964a19d"><emu-t>0</emu-t><emu-gann>[lookahead ∉ <emu-nt><a href="https://tc39.github.io/ecma262/#prod-DecimalDigit">DecimalDigit</a></emu-nt>]</emu-gann></emu-rhs>
+    <emu-rhs a="a8071b85"><emu-nt><a href="https://tc39.github.io/ecma262/#prod-HexEscapeSequence">HexEscapeSequence</a></emu-nt></emu-rhs>
+    <emu-rhs a="2649a73f"><emu-nt params="?U"><a href="#prod-RegExpUnicodeEscapeSequence">RegExpUnicodeEscapeSequence</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+    <emu-rhs a="2037e8bf"><emu-nt params="?U"><a href="#prod-IdentityEscape">IdentityEscape</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="ControlEscape" type="lexical" oneof="" id="prod-ControlEscape">
+    <emu-nt><a href="#prod-ControlEscape">ControlEscape</a></emu-nt><emu-geq>::</emu-geq><emu-oneof>one of</emu-oneof><emu-rhs><emu-t>f</emu-t><emu-t>n</emu-t><emu-t>r</emu-t><emu-t>t</emu-t><emu-t>v</emu-t></emu-rhs>
+</emu-production>
+<emu-production name="ControlLetter" type="lexical" oneof="" id="prod-ControlLetter">
+    <emu-nt><a href="#prod-ControlLetter">ControlLetter</a></emu-nt><emu-geq>::</emu-geq><emu-oneof>one of</emu-oneof><emu-rhs><emu-t>a</emu-t><emu-t>b</emu-t><emu-t>c</emu-t><emu-t>d</emu-t><emu-t>e</emu-t><emu-t>f</emu-t><emu-t>g</emu-t><emu-t>h</emu-t><emu-t>i</emu-t><emu-t>j</emu-t><emu-t>k</emu-t><emu-t>l</emu-t><emu-t>m</emu-t><emu-t>n</emu-t><emu-t>o</emu-t><emu-t>p</emu-t><emu-t>q</emu-t><emu-t>r</emu-t><emu-t>s</emu-t><emu-t>t</emu-t><emu-t>u</emu-t><emu-t>v</emu-t><emu-t>w</emu-t><emu-t>x</emu-t><emu-t>y</emu-t><emu-t>z</emu-t><emu-t>A</emu-t><emu-t>B</emu-t><emu-t>C</emu-t><emu-t>D</emu-t><emu-t>E</emu-t><emu-t>F</emu-t><emu-t>G</emu-t><emu-t>H</emu-t><emu-t>I</emu-t><emu-t>J</emu-t><emu-t>K</emu-t><emu-t>L</emu-t><emu-t>M</emu-t><emu-t>N</emu-t><emu-t>O</emu-t><emu-t>P</emu-t><emu-t>Q</emu-t><emu-t>R</emu-t><emu-t>S</emu-t><emu-t>T</emu-t><emu-t>U</emu-t><emu-t>V</emu-t><emu-t>W</emu-t><emu-t>X</emu-t><emu-t>Y</emu-t><emu-t>Z</emu-t></emu-rhs>
+</emu-production>
+<emu-production name="RegExpUnicodeEscapeSequence" params="U" type="lexical" id="prod-RegExpUnicodeEscapeSequence">
+    <emu-nt params="U"><a href="#prod-RegExpUnicodeEscapeSequence">RegExpUnicodeEscapeSequence</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="3d311810" constraints="+U"><emu-constraints>[+U]</emu-constraints><emu-t>u</emu-t><emu-nt><a href="#prod-LeadSurrogate">LeadSurrogate</a></emu-nt><emu-t>\u</emu-t><emu-nt><a href="#prod-TrailSurrogate">TrailSurrogate</a></emu-nt></emu-rhs>
+    <emu-rhs a="eb0da713" constraints="+U"><emu-constraints>[+U]</emu-constraints><emu-t>u</emu-t><emu-nt><a href="#prod-LeadSurrogate">LeadSurrogate</a></emu-nt></emu-rhs>
+    <emu-rhs a="d469a292" constraints="+U"><emu-constraints>[+U]</emu-constraints><emu-t>u</emu-t><emu-nt><a href="#prod-TrailSurrogate">TrailSurrogate</a></emu-nt></emu-rhs>
+    <emu-rhs a="816e2987" constraints="+U"><emu-constraints>[+U]</emu-constraints><emu-t>u</emu-t><emu-nt><a href="#prod-NonSurrogate">NonSurrogate</a></emu-nt></emu-rhs>
+    <emu-rhs a="4e7dd512" constraints="~U"><emu-constraints>[~U]</emu-constraints><emu-t>u</emu-t><emu-nt><a href="https://tc39.github.io/ecma262/#prod-Hex4Digits">Hex4Digits</a></emu-nt></emu-rhs>
+    <emu-rhs a="b837450f" constraints="+U"><emu-constraints>[+U]</emu-constraints><emu-t>u{</emu-t><emu-nt><a href="https://tc39.github.io/ecma262/#prod-HexDigits">HexDigits</a></emu-nt><emu-t>}</emu-t></emu-rhs>
+</emu-production></emu-grammar>
+<p>Each <code>\u</code> <emu-nt><a href="#prod-TrailSurrogate">TrailSurrogate</a></emu-nt> for which the choice of associated <code>u</code> <emu-nt><a href="#prod-LeadSurrogate">LeadSurrogate</a></emu-nt> is ambiguous shall be associated with the nearest possible <code>u</code> <emu-nt><a href="#prod-LeadSurrogate">LeadSurrogate</a></emu-nt> that would otherwise have no corresponding <code>\u</code> <emu-nt><a href="#prod-TrailSurrogate">TrailSurrogate</a></emu-nt>.</p>
+<emu-grammar><emu-production name="LeadSurrogate" type="lexical" id="prod-LeadSurrogate">
+    <emu-nt><a href="#prod-LeadSurrogate">LeadSurrogate</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="b4266993"><emu-nt><a href="https://tc39.github.io/ecma262/#prod-Hex4Digits">Hex4Digits</a></emu-nt><emu-gmod>but only if the SV of <emu-nt><a href="https://tc39.github.io/ecma262/#prod-Hex4Digits">Hex4Digits</a></emu-nt> is in the inclusive range 0xD800 to 0xDBFF</emu-gmod></emu-rhs>
+</emu-production>
+<emu-production name="TrailSurrogate" type="lexical" id="prod-TrailSurrogate">
+    <emu-nt><a href="#prod-TrailSurrogate">TrailSurrogate</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="134361fc"><emu-nt><a href="https://tc39.github.io/ecma262/#prod-Hex4Digits">Hex4Digits</a></emu-nt><emu-gmod>but only if the SV of <emu-nt><a href="https://tc39.github.io/ecma262/#prod-Hex4Digits">Hex4Digits</a></emu-nt> is in the inclusive range 0xDC00 to 0xDFFF</emu-gmod></emu-rhs>
+</emu-production>
+<emu-production name="NonSurrogate" type="lexical" id="prod-NonSurrogate">
+    <emu-nt><a href="#prod-NonSurrogate">NonSurrogate</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="de3cc0ae"><emu-nt><a href="https://tc39.github.io/ecma262/#prod-Hex4Digits">Hex4Digits</a></emu-nt><emu-gmod>but only if the SV of <emu-nt><a href="https://tc39.github.io/ecma262/#prod-Hex4Digits">Hex4Digits</a></emu-nt> is not in the inclusive range 0xD800 to 0xDFFF</emu-gmod></emu-rhs>
+</emu-production>
+<emu-production name="IdentityEscape" params="U" type="lexical" id="prod-IdentityEscape">
+    <emu-nt params="U"><a href="#prod-IdentityEscape">IdentityEscape</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="930458ac" constraints="+U"><emu-constraints>[+U]</emu-constraints><emu-nt><a href="#prod-SyntaxCharacter">SyntaxCharacter</a></emu-nt></emu-rhs>
+    <emu-rhs a="d4a820cc" constraints="+U"><emu-constraints>[+U]</emu-constraints><emu-t>/</emu-t></emu-rhs>
+    <emu-rhs a="3274530b" constraints="~U"><emu-constraints>[~U]</emu-constraints><emu-nt><a href="https://tc39.github.io/ecma262/#prod-SourceCharacter">SourceCharacter</a></emu-nt><emu-gmod>but not <emu-nt><a href="https://tc39.github.io/ecma262/#prod-UnicodeIDContinue">UnicodeIDContinue</a></emu-nt></emu-gmod></emu-rhs>
+</emu-production>
+<emu-production name="DecimalEscape" type="lexical" id="prod-DecimalEscape">
+    <emu-nt><a href="#prod-DecimalEscape">DecimalEscape</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="627951dd"><emu-nt><a href="https://tc39.github.io/ecma262/#prod-NonZeroDigit">NonZeroDigit</a></emu-nt><emu-nt optional=""><a href="https://tc39.github.io/ecma262/#prod-DecimalDigits">DecimalDigits</a><emu-mods><emu-opt>opt</emu-opt></emu-mods></emu-nt><emu-gann>[lookahead ∉ <emu-nt><a href="https://tc39.github.io/ecma262/#prod-DecimalDigit">DecimalDigit</a></emu-nt>]</emu-gann></emu-rhs>
+</emu-production>
+<emu-production name="CharacterClassEscape" type="lexical" oneof="" id="prod-CharacterClassEscape">
+    <emu-nt><a href="#prod-CharacterClassEscape">CharacterClassEscape</a></emu-nt><emu-geq>::</emu-geq><emu-oneof>one of</emu-oneof><emu-rhs><emu-t>d</emu-t><emu-t>D</emu-t><emu-t>s</emu-t><emu-t>S</emu-t><emu-t>w</emu-t><emu-t>W</emu-t></emu-rhs>
+</emu-production>
+<emu-production name="CharacterClass" params="U" type="lexical" id="prod-CharacterClass">
+    <emu-nt params="U"><a href="#prod-CharacterClass">CharacterClass</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="4acdd45f"><emu-t>[</emu-t><emu-gann>[lookahead ∉ { <emu-t>^</emu-t> }]</emu-gann><emu-nt params="?U"><a href="#prod-ClassRanges">ClassRanges</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-t>]</emu-t></emu-rhs>
+    <emu-rhs a="93d354c0"><emu-t>[</emu-t><emu-t>^</emu-t><emu-nt params="?U"><a href="#prod-ClassRanges">ClassRanges</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-t>]</emu-t></emu-rhs>
+</emu-production>
+<emu-production name="ClassRanges" params="U" type="lexical" id="prod-ClassRanges">
+    <emu-nt params="U"><a href="#prod-ClassRanges">ClassRanges</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="37b9c04c"><emu-gann>[empty]</emu-gann></emu-rhs>
+    <emu-rhs a="43c27130"><emu-nt params="?U"><a href="#prod-NonemptyClassRanges">NonemptyClassRanges</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="NonemptyClassRanges" params="U" type="lexical" id="prod-NonemptyClassRanges">
+    <emu-nt params="U"><a href="#prod-NonemptyClassRanges">NonemptyClassRanges</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="cdf200f3"><emu-nt params="?U"><a href="#prod-ClassAtom">ClassAtom</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+    <emu-rhs a="4a76f2ec"><emu-nt params="?U"><a href="#prod-ClassAtom">ClassAtom</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-nt params="?U"><a href="#prod-NonemptyClassRangesNoDash">NonemptyClassRangesNoDash</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+    <emu-rhs a="63fd2e03"><emu-nt params="?U"><a href="#prod-ClassAtom">ClassAtom</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-t>-</emu-t><emu-nt params="?U"><a href="#prod-ClassAtom">ClassAtom</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-nt params="?U"><a href="#prod-ClassRanges">ClassRanges</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="NonemptyClassRangesNoDash" params="U" type="lexical" id="prod-NonemptyClassRangesNoDash">
+    <emu-nt params="U"><a href="#prod-NonemptyClassRangesNoDash">NonemptyClassRangesNoDash</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="cdf200f3"><emu-nt params="?U"><a href="#prod-ClassAtom">ClassAtom</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+    <emu-rhs a="2d1a8609"><emu-nt params="?U"><a href="#prod-ClassAtomNoDash">ClassAtomNoDash</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-nt params="?U"><a href="#prod-NonemptyClassRangesNoDash">NonemptyClassRangesNoDash</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+    <emu-rhs a="b61280d4"><emu-nt params="?U"><a href="#prod-ClassAtomNoDash">ClassAtomNoDash</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-t>-</emu-t><emu-nt params="?U"><a href="#prod-ClassAtom">ClassAtom</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt><emu-nt params="?U"><a href="#prod-ClassRanges">ClassRanges</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="ClassAtom" params="U" type="lexical" id="prod-ClassAtom">
+    <emu-nt params="U"><a href="#prod-ClassAtom">ClassAtom</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="6f24a587"><emu-t>-</emu-t></emu-rhs>
+    <emu-rhs a="714140ac"><emu-nt params="?U"><a href="#prod-ClassAtomNoDash">ClassAtomNoDash</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="ClassAtomNoDash" params="U" type="lexical" id="prod-ClassAtomNoDash">
+    <emu-nt params="U"><a href="#prod-ClassAtomNoDash">ClassAtomNoDash</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="ecde6e28"><emu-nt><a href="https://tc39.github.io/ecma262/#prod-SourceCharacter">SourceCharacter</a></emu-nt><emu-gmod>but not one of <emu-t>\</emu-t> or <emu-t>]</emu-t> or <emu-t>-</emu-t></emu-gmod></emu-rhs>
+    <emu-rhs a="379e2483"><emu-t>\</emu-t><emu-nt params="?U"><a href="#prod-ClassEscape">ClassEscape</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+</emu-production>
+<emu-production name="ClassEscape" params="U" type="lexical" id="prod-ClassEscape">
+    <emu-nt params="U"><a href="#prod-ClassEscape">ClassEscape</a><emu-mods><emu-params>[U]</emu-params></emu-mods></emu-nt><emu-geq>::</emu-geq><emu-rhs a="0185ce89"><emu-t>b</emu-t></emu-rhs>
+    <emu-rhs a="b14e06ba" constraints="+U"><emu-constraints>[+U]</emu-constraints><emu-t>-</emu-t></emu-rhs>
+    <emu-rhs a="6f05bee4"><emu-nt><a href="#prod-CharacterClassEscape">CharacterClassEscape</a></emu-nt></emu-rhs>
+    <emu-rhs a="4b80816a"><emu-nt params="?U"><a href="#prod-CharacterEscape">CharacterEscape</a><emu-mods><emu-params>[?U]</emu-params></emu-mods></emu-nt></emu-rhs>
+</emu-production></emu-grammar>
+</emu-import>
+</emu-clause>
+
+<emu-clause id="sec-patternsemantics">
+  <h1><span class="secnum">3</span>Pattern Semantics<span class="utils"><span class="anchor"><a href="#sec-patternsemantics">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+  <emu-import href="./semantics.html"><emu-clause id="sec-pattern">
+  <h1><span class="secnum">3.1</span>Pattern<span class="utils"><span class="anchor"><a href="#sec-pattern">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+  <p>The production  <emu-grammar><emu-production name="Pattern" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Pattern">Pattern</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="79a5bbd0"><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> <ins>with +1 as its <var>direction</var> argument</ins> to obtain a Matcher <var>m</var>.</li><li>Return an internal closure that takes two arguments, a String <var>str</var> and an integer <var>index</var>, and performs the following steps:<ol><li>Assert: <var>index</var> ≤ the number of elements in <var>str</var>.</li><li>If <var>Unicode</var> is <emu-val>true</emu-val>, let <var>Input</var> be a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> consisting of the sequence of code points of <var>str</var> interpreted as a UTF-16 encoded (<emu-xref href="#sec-ecmascript-language-types-string-type"><a href="https://tc39.github.io/ecma262/#sec-ecmascript-language-types-string-type">6.1.4</a></emu-xref>) Unicode string. Otherwise, let <var>Input</var> be a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> consisting of the sequence of code units that are the elements of <var>str</var>. <var>Input</var> will be used throughout the algorithms in <emu-xref href="#sec-pattern-semantics"><a href="https://tc39.github.io/ecma262/#sec-pattern-semantics">21.2.2</a></emu-xref>. Each element of <var>Input</var> is considered to be a character.</li><li>Let <var>InputLength</var> be the number of characters contained in <var>Input</var>. This variable will be used throughout the algorithms in <emu-xref href="#sec-pattern-semantics"><a href="https://tc39.github.io/ecma262/#sec-pattern-semantics">21.2.2</a></emu-xref>.</li><li>Let <var>listIndex</var> be the index into <var>Input</var> of the character that was obtained from element <var>index</var> of <var>str</var>.</li><li>Let <var>c</var> be a Continuation that always returns its State argument as a successful MatchResult.</li><li>Let <var>cap</var> be a <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> of <var>NcapturingParens</var> <emu-val>undefined</emu-val> values, indexed 1 through <var>NcapturingParens</var>.</li><li>Let <var>x</var> be the State (<var>listIndex</var>, <var>cap</var>).</li><li>Call <var>m</var>(<var>x</var>, <var>c</var>) and return its result.
+  </li></ol></li></ol></emu-alg>
+  <emu-note><span class="note">Note</span>
+    <p>A Pattern evaluates (“compiles”) to an internal procedure value. <emu-xref aoid="RegExpBuiltinExec"><a href="https://tc39.github.io/ecma262/#sec-regexpbuiltinexec">RegExpBuiltinExec</a></emu-xref> can then apply this procedure to a String and an offset within the String to determine whether the pattern would match starting at exactly that offset within the String, and, if it does match, what the values of the capturing parentheses would be. The algorithms in  <emu-xref href="#sec-pattern-semantics"><a href="https://tc39.github.io/ecma262/#sec-pattern-semantics">21.2.2</a></emu-xref> are designed so that compiling a pattern may throw a <emu-val>SyntaxError</emu-val> exception; on the other hand, once the pattern is successfully compiled, applying the resulting internal procedure to find a match in a String cannot throw an exception (except for any host-defined exceptions that can occur anywhere such as out-of-memory).</p>
+  </emu-note>
+</emu-clause>
+
+<!-- es6num="21.2.2.3" -->
+<emu-clause id="sec-disjunction">
+  <h1><span class="secnum">3.2</span>Disjunction<span class="utils"><span class="anchor"><a href="#sec-disjunction">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+  <p><ins>With argument <var>direction</var>.</ins></p>
+  <p>The production  <emu-grammar><emu-production name="Disjunction" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="3b74e96e"><emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates by evaluating <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt> to obtain a Matcher and returning that Matcher.</p>
+  <p>The production  <emu-grammar><emu-production name="Disjunction" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="253d8b05"><emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt><emu-t>|</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt> <ins>with argument <var>direction</var></ins> to obtain a Matcher <var>m1</var>.</li><li>Evaluate <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> <ins>with argument <var>direction</var></ins> to obtain a Matcher <var>m2</var>.</li><li>Return an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps when evaluated:<ol><li>Call <var>m1</var>(<var>x</var>, <var>c</var>) and let <var>r</var> be its result.</li><li>If <var>r</var> is not <emu-const>failure</emu-const>, return <var>r</var>.</li><li>Call <var>m2</var>(<var>x</var>, <var>c</var>) and return its result.
+  </li></ol></li></ol></emu-alg>
+  <emu-note><span class="note">Note</span>
+    <p>The <code>|</code> regular expression operator separates two alternatives. The pattern first tries to match the left <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt> (followed by the sequel of the regular expression); if it fails, it tries to match the right <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> (followed by the sequel of the regular expression). If the left <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt>, the right <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt>, and the sequel all have choice points, all choices in the sequel are tried before moving on to the next choice in the left <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt>. If choices in the left <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt> are exhausted, the right <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> is tried instead of the left <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt>. Any capturing parentheses inside a portion of the pattern skipped by <code>|</code> produce <emu-val>undefined</emu-val> values instead of Strings. Thus, for example,</p>
+    <pre><code class="javascript hljs">/a|ab/.exec(<span class="hljs-string">"abc"</span>)</code></pre>
+    <p>returns the result <code>"a"</code> and not <code>"ab"</code>. Moreover,</p>
+    <pre><code class="javascript hljs">/((a)|(ab))((c)|(bc))/.exec(<span class="hljs-string">"abc"</span>)</code></pre>
+    <p>returns the array</p>
+    <pre><code class="javascript hljs">[<span class="hljs-string">"abc"</span>, <span class="hljs-string">"a"</span>, <span class="hljs-string">"a"</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-string">"bc"</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-string">"bc"</span>]</code></pre>
+    <p>and not</p>
+    <pre><code class="javascript hljs">[<span class="hljs-string">"abc"</span>, <span class="hljs-string">"ab"</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-string">"ab"</span>, <span class="hljs-string">"c"</span>, <span class="hljs-string">"c"</span>, <span class="hljs-literal">undefined</span>]</code></pre>
+    <ins class="block"><p>The order in which the two alternatives are tried is independent of the value of <var>direction</var>.</p></ins>
+  </emu-note>
+  
+</emu-clause>
+
+<!-- es6num="21.2.2.4" -->
+<emu-clause id="sec-alternative">
+  <h1><span class="secnum">3.3</span>Alternative<span class="utils"><span class="anchor"><a href="#sec-alternative">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+  <p><ins>With argument <var>direction</var>.</ins></p>
+  <p>The production  <emu-grammar><emu-production name="Alternative" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="37b9c04c"><emu-gann>[empty]</emu-gann></emu-rhs>
+</emu-production></emu-grammar> evaluates by returning a Matcher that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and returns the result of calling <var>c</var>(<var>x</var>).</p>
+  <p>The production  <emu-grammar><emu-production name="Alternative" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="bdc4c1a6"><emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt><emu-nt><a href="#prod-Term">Term</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt> <ins>with argument <var>direction</var></ins> to obtain a Matcher <var>m1</var>.</li><li>Evaluate <emu-nt><a href="#prod-Term">Term</a></emu-nt> <ins>with argument <var>direction</var></ins> to obtain a Matcher <var>m2</var>.</li><li><ins>If <var>direction</var> is equal to +1, then,</ins><ol><li>Return an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps when evaluated:<ol><li>Let <var>d</var> be a Continuation that takes a State argument <var>y</var> and returns the result of calling <var>m2</var>(<var>y</var>, <var>c</var>).</li><li>Call <var>m1</var>(<var>x</var>, <var>d</var>) and return its result.</li></ol></li></ol></li><li><ins>Else, <var>direction</var> is equal to -1.</ins><ol><li><ins>Return an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps when evaluated:</ins><ol><li><ins>Let <var>d</var> be a Continuation that takes a State argument <var>y</var> and returns the result of calling <var>m1</var>(<var>y</var>, <var>c</var>).</ins></li><li><ins>Call <var>m2</var>(<var>x</var>, <var>d</var>) and return its result.</ins>
+  </li></ol></li></ol></li></ol></emu-alg>
+  <emu-note><span class="note">Note</span>
+    <p>Consecutive <emu-nt><a href="#prod-Term">Term</a></emu-nt>s try to simultaneously match consecutive portions of <var>Input</var>.
+    
+    <ins>When <var>direction</var> is equal to +1,</ins> if the left <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt>, the right <emu-nt><a href="#prod-Term">Term</a></emu-nt>, and the sequel of the regular expression all have choice points, all choices in the sequel are tried before moving on to the next choice in the right <emu-nt><a href="#prod-Term">Term</a></emu-nt>, and all choices in the right <emu-nt><a href="#prod-Term">Term</a></emu-nt> are tried before moving on to the next choice in the left <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt>.</p>
+    <ins>When <var>direction</var> is equal to -1, the evaluation order of <emu-nt><a href="#prod-Alternative">Alternative</a></emu-nt> and <emu-nt><a href="#prod-Term">Term</a></emu-nt> are reversed.</ins>
+  </emu-note>
+</emu-clause>
+
+<!-- es6num="21.2.2.5" -->
+<emu-clause id="sec-term">
+  <h1><span class="secnum">3.4</span>Term<span class="utils"><span class="anchor"><a href="#sec-term">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+  <p><ins>With argument <var>direction</var>.</ins></p>
+  <p>The production  <emu-grammar><emu-production name="Term" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Term">Term</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="e03dc251"><emu-nt><a href="#prod-Assertion">Assertion</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates by returning an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps when evaluated:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-Assertion">Assertion</a></emu-nt> to obtain an AssertionTester <var>t</var>.</li><li>Call <var>t</var>(<var>x</var>) and let <var>r</var> be the resulting Boolean value.</li><li>If <var>r</var> is <emu-val>false</emu-val>, return <emu-const>failure</emu-const>.</li><li>Call <var>c</var>(<var>x</var>) and return its result.
+  </li></ol></emu-alg>
+  <ins class="block">
+  <emu-note><span class="note">Note</span>
+    <p>The AssertionTester is independent of <var>direction</var>.</p>
+  </emu-note>
+  </ins>
+  <p>The production  <emu-grammar><emu-production name="Term" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Term">Term</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="41dded41"><emu-nt><a href="#prod-Atom">Atom</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Return the Matcher that is the result of evaluating <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> <ins>with argument <var>direction</var></ins>.
+  </li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="Term" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Term">Term</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="44aed0a4"><emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-nt><a href="#prod-Quantifier">Quantifier</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-Atom">Atom</a></emu-nt>  <ins>with argument <var>direction</var></ins> to obtain a Matcher <var>m</var>.</li><li>Evaluate <emu-nt><a href="#prod-Quantifier">Quantifier</a></emu-nt> to obtain the three results: an integer <var>min</var>, an integer (or ∞) <var>max</var>, and Boolean <var>greedy</var>.</li><li>If <var>max</var> is finite and less than <var>min</var>, throw a <emu-val>SyntaxError</emu-val> exception.</li><li>Let <var>parenIndex</var> be the number of left capturing parentheses in the entire regular expression that occur to the left of this production expansion's <emu-nt><a href="#prod-Term">Term</a></emu-nt>. This is the total number of times the <emu-grammar><emu-production name="Atom" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="34eb148f"><emu-t>(</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production></emu-grammar> production is expanded prior to this production's <emu-nt><a href="#prod-Term">Term</a></emu-nt> plus the total number of <emu-grammar><emu-production name="Atom" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="34eb148f"><emu-t>(</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production></emu-grammar> productions enclosing this <emu-nt><a href="#prod-Term">Term</a></emu-nt>.</li><li>Let <var>parenCount</var> be the number of left capturing parentheses in the expansion of this production's <emu-nt><a href="#prod-Atom">Atom</a></emu-nt>. This is the total number of <emu-grammar><emu-production name="Atom" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="34eb148f"><emu-t>(</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production></emu-grammar> productions enclosed by this production's <emu-nt><a href="#prod-Atom">Atom</a></emu-nt>.</li><li>Return an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps when evaluated:<ol><li>Call <emu-xref aoid="RepeatMatcher"><a href="#sec-runtime-semantics-repeatmatcher-abstract-operation">RepeatMatcher</a></emu-xref>(<var>m</var>, <var>min</var>, <var>max</var>, <var>greedy</var>, <var>x</var>, <var>c</var>, <var>parenIndex</var>, <var>parenCount</var>) and return its result.
+  </li></ol></li></ol></emu-alg>
+
+  <!-- es6num="21.2.2.5.1" -->
+  <emu-clause id="sec-runtime-semantics-repeatmatcher-abstract-operation" aoid="RepeatMatcher">
+    <h1><span class="secnum">3.4.1</span>Runtime Semantics: RepeatMatcher Abstract Operation<span class="utils"><span class="anchor"><a href="#sec-runtime-semantics-repeatmatcher-abstract-operation">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+    <p>The abstract operation RepeatMatcher takes eight parameters, a Matcher <var>m</var>, an integer <var>min</var>, an integer (or ∞) <var>max</var>, a Boolean <var>greedy</var>, a State <var>x</var>, a Continuation <var>c</var>, an integer <var>parenIndex</var>, and an integer <var>parenCount</var>, and performs the following steps:</p>
+    <emu-alg><ol><li>If <var>max</var> is zero, return <var>c</var>(<var>x</var>).</li><li>Let <var>d</var> be an internal Continuation closure that takes one State argument <var>y</var> and performs the following steps when evaluated:<ol><li>If <var>min</var> is zero and <var>y</var>'s <var>endIndex</var> is equal to <var>x</var>'s <var>endIndex</var>, return <emu-const>failure</emu-const>.</li><li>If <var>min</var> is zero, let <var>min2</var> be zero; otherwise let <var>min2</var> be <var>min</var>-1.</li><li>If <var>max</var> is ∞, let <var>max2</var> be ∞; otherwise let <var>max2</var> be <var>max</var>-1.</li><li>Call <emu-xref aoid="RepeatMatcher"><a href="#sec-runtime-semantics-repeatmatcher-abstract-operation">RepeatMatcher</a></emu-xref>(<var>m</var>, <var>min2</var>, <var>max2</var>, <var>greedy</var>, <var>y</var>, <var>c</var>, <var>parenIndex</var>, <var>parenCount</var>) and return its result.</li></ol></li><li>Let <var>cap</var> be a fresh copy of <var>x</var>'s <var>captures</var> <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref>.</li><li>For each integer <var>k</var> that satisfies <var>parenIndex</var> &lt; <var>k</var> and <var>k</var> ≤ <var>parenIndex</var>+<var>parenCount</var>, set <var>cap</var>[<var>k</var>] to <emu-val>undefined</emu-val>.</li><li>Let <var>e</var> be <var>x</var>'s <var>endIndex</var>.</li><li>Let <var>xr</var> be the State (<var>e</var>, <var>cap</var>).</li><li>If <var>min</var> is not zero, return <var>m</var>(<var>xr</var>, <var>d</var>).</li><li>If <var>greedy</var> is <emu-val>false</emu-val>, then<ol><li>Call <var>c</var>(<var>x</var>) and let <var>z</var> be its result.</li><li>If <var>z</var> is not <emu-const>failure</emu-const>, return <var>z</var>.</li><li>Call <var>m</var>(<var>xr</var>, <var>d</var>) and return its result.</li></ol></li><li>Call <var>m</var>(<var>xr</var>, <var>d</var>) and let <var>z</var> be its result.</li><li>If <var>z</var> is not <emu-const>failure</emu-const>, return <var>z</var>.</li><li>Call <var>c</var>(<var>x</var>) and return its result.
+    </li></ol></emu-alg>
+    <emu-note><span class="note">Note 1</span>
+      <p>An <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> followed by a <emu-nt><a href="#prod-Quantifier">Quantifier</a></emu-nt> is repeated the number of times specified by the <emu-nt><a href="#prod-Quantifier">Quantifier</a></emu-nt>. A <emu-nt><a href="#prod-Quantifier">Quantifier</a></emu-nt> can be non-greedy, in which case the <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> pattern is repeated as few times as possible while still matching the sequel, or it can be greedy, in which case the <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> pattern is repeated as many times as possible while still matching the sequel. The <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> pattern is repeated rather than the input character sequence that it matches, so different repetitions of the <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> can match different input substrings.</p>
+    </emu-note>
+    <emu-note><span class="note">Note 2</span>
+      <p>If the <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> and the sequel of the regular expression all have choice points, the <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> is first matched as many (or as few, if non-greedy) times as possible. All choices in the sequel are tried before moving on to the next choice in the last repetition of <emu-nt><a href="#prod-Atom">Atom</a></emu-nt>. All choices in the last (n<sup>th</sup>) repetition of <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> are tried before moving on to the next choice in the next-to-last (n-1)<sup>st</sup> repetition of <emu-nt><a href="#prod-Atom">Atom</a></emu-nt>; at which point it may turn out that more or fewer repetitions of <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> are now possible; these are exhausted (again, starting with either as few or as many as possible) before moving on to the next choice in the (n-1)<sup>st</sup> repetition of <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> and so on.</p>
+      <p>Compare</p>
+      <pre><code class="javascript hljs">/a[a-z]{<span class="hljs-number">2</span>,<span class="hljs-number">4</span>}/.exec(<span class="hljs-string">"abcdefghi"</span>)</code></pre>
+      <p>which returns <code>"abcde"</code> with</p>
+      <pre><code class="javascript hljs">/a[a-z]{<span class="hljs-number">2</span>,<span class="hljs-number">4</span>}?<span class="hljs-regexp">/.exec("abcdefghi")</span></code></pre>
+      <p>which returns <code>"abc"</code>.</p>
+      <p>Consider also</p>
+      <pre><code class="javascript hljs">/(aa|aabaac|ba|b|c)*<span class="hljs-regexp">/.exec("aabaac")</span></code></pre>
+      <p>which, by the choice point ordering above, returns the array</p>
+      <pre><code class="javascript hljs">[<span class="hljs-string">"aaba"</span>, <span class="hljs-string">"ba"</span>]</code></pre>
+      <p>and not any of:</p>
+      <pre><code class="javascript hljs">[<span class="hljs-string">"aabaac"</span>, <span class="hljs-string">"aabaac"</span>]
+[<span class="hljs-string">"aabaac"</span>, <span class="hljs-string">"c"</span>]</code></pre>
+      <p>The above ordering of choice points can be used to write a regular expression that calculates the greatest common divisor of two numbers (represented in unary notation). The following example calculates the gcd of 10 and 15:</p>
+      <pre><code class="javascript hljs"><span class="hljs-string">"aaaaaaaaaa,aaaaaaaaaaaaaaa"</span>.replace(<span class="hljs-regexp">/^(a+)\1*,\1+$/</span>,<span class="hljs-string">"$1"</span>)</code></pre>
+      <p>which returns the gcd in unary notation <code>"aaaaa"</code>.</p>
+    </emu-note>
+    <emu-note><span class="note">Note 3</span>
+      <p>Step 4 of the RepeatMatcher clears <emu-nt><a href="#prod-Atom">Atom</a></emu-nt>'s captures each time <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> is repeated. We can see its behaviour in the regular expression</p>
+      <pre><code class="javascript hljs">/(z)((a+)?(b+)?(c))*<span class="hljs-regexp">/.exec("zaacbbbcac")</span></code></pre>
+      <p>which returns the array</p>
+      <pre><code class="javascript hljs">[<span class="hljs-string">"zaacbbbcac"</span>, <span class="hljs-string">"z"</span>, <span class="hljs-string">"ac"</span>, <span class="hljs-string">"a"</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-string">"c"</span>]</code></pre>
+      <p>and not</p>
+      <pre><code class="javascript hljs">[<span class="hljs-string">"zaacbbbcac"</span>, <span class="hljs-string">"z"</span>, <span class="hljs-string">"ac"</span>, <span class="hljs-string">"a"</span>, <span class="hljs-string">"bbb"</span>, <span class="hljs-string">"c"</span>]</code></pre>
+      <p>because each iteration of the outermost <code>*</code> clears all captured Strings contained in the quantified <emu-nt><a href="#prod-Atom">Atom</a></emu-nt>, which in this case includes capture Strings numbered 2, 3, 4, and 5.</p>
+    </emu-note>
+    <emu-note><span class="note">Note 4</span>
+      <p>Step 1 of the RepeatMatcher's <var>d</var> closure states that, once the minimum number of repetitions has been satisfied, any more expansions of <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> that match the empty character sequence are not considered for further repetitions. This prevents the regular expression engine from falling into an infinite loop on patterns such as:</p>
+      <pre><code class="javascript hljs">/(a*)*<span class="hljs-regexp">/.exec("b")</span></code></pre>
+      <p>or the slightly more complicated:</p>
+      <pre><code class="javascript hljs">/(a*)b\<span class="hljs-number">1</span>+<span class="hljs-regexp">/.exec("baaaac")</span></code></pre>
+      <p>which returns the array</p>
+      <pre><code class="javascript hljs">[<span class="hljs-string">"b"</span>, <span class="hljs-string">""</span>]</code></pre>
+    </emu-note>
+  </emu-clause>
+</emu-clause>
+
+<!-- es6num="21.2.2.6" -->
+<emu-clause id="sec-assertion">
+  <h1><span class="secnum">3.5</span>Assertion<span class="utils"><span class="anchor"><a href="#sec-assertion">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+  <p>The production  <emu-grammar><emu-production name="Assertion" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Assertion">Assertion</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="e5878811"><emu-t>^</emu-t></emu-rhs>
+</emu-production></emu-grammar> evaluates by returning an internal AssertionTester closure that takes a State argument <var>x</var> and performs the following steps when evaluated:</p>
+  <emu-alg><ol><li>Let <var>e</var> be <var>x</var>'s <var>endIndex</var>.</li><li>If <var>e</var> is zero, return <emu-val>true</emu-val>.</li><li>If <var>Multiline</var> is <emu-val>false</emu-val>, return <emu-val>false</emu-val>.</li><li>If the character <var>Input</var>[<var>e</var>-1] is one of <emu-nt><a href="https://tc39.github.io/ecma262/#prod-LineTerminator">LineTerminator</a></emu-nt>, return <emu-val>true</emu-val>.</li><li>Return <emu-val>false</emu-val>.
+  </li></ol></emu-alg>
+  <emu-note><span class="note">Note</span>
+    <p>Even when the <code>y</code> flag is used with a pattern, <code>^</code> always matches only at the beginning of <var>Input</var>, or (if <var>Multiline</var> is <emu-val>true</emu-val>) at the beginning of a line.</p>
+  </emu-note>
+  <p>The production  <emu-grammar><emu-production name="Assertion" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Assertion">Assertion</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="1262cc92"><emu-t>$</emu-t></emu-rhs>
+</emu-production></emu-grammar> evaluates by returning an internal AssertionTester closure that takes a State argument <var>x</var> and performs the following steps when evaluated:</p>
+  <emu-alg><ol><li>Let <var>e</var> be <var>x</var>'s <var>endIndex</var>.</li><li>If <var>e</var> is equal to <var>InputLength</var>, return <emu-val>true</emu-val>.</li><li>If <var>Multiline</var> is <emu-val>false</emu-val>, return <emu-val>false</emu-val>.</li><li>If the character <var>Input</var>[<var>e</var>] is one of <emu-nt><a href="https://tc39.github.io/ecma262/#prod-LineTerminator">LineTerminator</a></emu-nt>, return <emu-val>true</emu-val>.</li><li>Return <emu-val>false</emu-val>.
+  </li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="Assertion" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Assertion">Assertion</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="1e228da5"><emu-t>\</emu-t><emu-t>b</emu-t></emu-rhs>
+</emu-production></emu-grammar> evaluates by returning an internal AssertionTester closure that takes a State argument <var>x</var> and performs the following steps when evaluated:</p>
+  <emu-alg><ol><li>Let <var>e</var> be <var>x</var>'s <var>endIndex</var>.</li><li>Call <emu-xref aoid="IsWordChar"><a href="#sec-runtime-semantics-iswordchar-abstract-operation">IsWordChar</a></emu-xref>(<var>e</var>-1) and let <var>a</var> be the Boolean result.</li><li>Call <emu-xref aoid="IsWordChar"><a href="#sec-runtime-semantics-iswordchar-abstract-operation">IsWordChar</a></emu-xref>(<var>e</var>) and let <var>b</var> be the Boolean result.</li><li>If <var>a</var> is <emu-val>true</emu-val> and <var>b</var> is <emu-val>false</emu-val>, return <emu-val>true</emu-val>.</li><li>If <var>a</var> is <emu-val>false</emu-val> and <var>b</var> is <emu-val>true</emu-val>, return <emu-val>true</emu-val>.</li><li>Return <emu-val>false</emu-val>.
+  </li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="Assertion" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Assertion">Assertion</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="a5dc97fa"><emu-t>\</emu-t><emu-t>B</emu-t></emu-rhs>
+</emu-production></emu-grammar> evaluates by returning an internal AssertionTester closure that takes a State argument <var>x</var> and performs the following steps when evaluated:</p>
+  <emu-alg><ol><li>Let <var>e</var> be <var>x</var>'s <var>endIndex</var>.</li><li>Call <emu-xref aoid="IsWordChar"><a href="#sec-runtime-semantics-iswordchar-abstract-operation">IsWordChar</a></emu-xref>(<var>e</var>-1) and let <var>a</var> be the Boolean result.</li><li>Call <emu-xref aoid="IsWordChar"><a href="#sec-runtime-semantics-iswordchar-abstract-operation">IsWordChar</a></emu-xref>(<var>e</var>) and let <var>b</var> be the Boolean result.</li><li>If <var>a</var> is <emu-val>true</emu-val> and <var>b</var> is <emu-val>false</emu-val>, return <emu-val>false</emu-val>.</li><li>If <var>a</var> is <emu-val>false</emu-val> and <var>b</var> is <emu-val>true</emu-val>, return <emu-val>false</emu-val>.</li><li>Return <emu-val>true</emu-val>.
+  </li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="Assertion" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Assertion">Assertion</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="cfb94f94"><emu-t>(</emu-t><emu-t>?</emu-t><emu-t>=</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> <ins>with +1 as its <var>direction</var> argument</ins> to obtain a Matcher <var>m</var>.</li><li>Return an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps:<ol><li>Let <var>d</var> be a Continuation that always returns its State argument as a successful MatchResult.</li><li>Call <var>m</var>(<var>x</var>, <var>d</var>) and let <var>r</var> be its result.</li><li>If <var>r</var> is <emu-const>failure</emu-const>, return <emu-const>failure</emu-const>.</li><li>Let <var>y</var> be <var>r</var>'s State.</li><li>Let <var>cap</var> be <var>y</var>'s <var>captures</var> <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref>.</li><li>Let <var>xe</var> be <var>x</var>'s <var>endIndex</var>.</li><li>Let <var>z</var> be the State (<var>xe</var>, <var>cap</var>).</li><li>Call <var>c</var>(<var>z</var>) and return its result.
+  </li></ol></li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="Assertion" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Assertion">Assertion</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="ba98f6e2"><emu-t>(</emu-t><emu-t>?</emu-t><emu-t>!</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> <ins>with +1 as its <var>direction</var> argument</ins> to obtain a Matcher <var>m</var>.</li><li>Return an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps:<ol><li>Let <var>d</var> be a Continuation that always returns its State argument as a successful MatchResult.</li><li>Call <var>m</var>(<var>x</var>, <var>d</var>) and let <var>r</var> be its result.</li><li>If <var>r</var> is not <emu-const>failure</emu-const>, return <emu-const>failure</emu-const>.</li><li>Call <var>c</var>(<var>x</var>) and return its result.
+  </li></ol></li></ol></emu-alg>
+  <ins class="block">
+  <p>The production  <emu-grammar><emu-production name="Assertion" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Assertion">Assertion</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="4cab1004"><emu-t>(</emu-t><emu-t>?</emu-t><emu-t>&lt;=</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> with -1 as its <var>direction</var> argument to obtain a Matcher <var>m</var>.</li><li>Return an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps:<ol><li>Let <var>d</var> be a Continuation that always returns its State argument as a successful MatchResult.</li><li>Call <var>m</var>(<var>x</var>, <var>d</var>) and let <var>r</var> be its result.</li><li>If <var>r</var> is <emu-const>failure</emu-const>, return <emu-const>failure</emu-const>.</li><li>Let <var>y</var> be <var>r</var>'s State.</li><li>Let <var>cap</var> be <var>y</var>'s <var>captures</var> <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref>.</li><li>Let <var>xe</var> be <var>x</var>'s <var>endIndex</var>.</li><li>Let <var>z</var> be the State (<var>xe</var>, <var>cap</var>).</li><li>Call <var>c</var>(<var>z</var>) and return its result.
+  </li></ol></li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="Assertion" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Assertion">Assertion</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="74e75484"><emu-t>(</emu-t><emu-t>?</emu-t><emu-t>&lt;!</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> with -1 as its <var>direction</var> argument to obtain a Matcher <var>m</var>.</li><li>Return an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps:<ol><li>Let <var>d</var> be a Continuation that always returns its State argument as a successful MatchResult.</li><li>Call <var>m</var>(<var>x</var>, <var>d</var>) and let <var>r</var> be its result.</li><li>If <var>r</var> is not <emu-const>failure</emu-const>, return <emu-const>failure</emu-const>.</li><li>Call <var>c</var>(<var>x</var>) and return its result.
+  </li></ol></li></ol></emu-alg>
+  </ins>
+
+  <!-- es6num="21.2.2.6.1" -->
+  <emu-clause id="sec-runtime-semantics-wordcharacters-abstract-operation" aoid="WordCharacters">
+    <h1><span class="secnum">3.5.1</span>Runtime Semantics: WordCharacters Abstract Operation<span class="utils"><span class="anchor"><a href="#sec-runtime-semantics-wordcharacters-abstract-operation">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+    <p>The abstract operation WordCharacters performs the following steps:</p>
+    <emu-alg><ol><li>Let <var>A</var> be a set of characters containing the sixty-three characters:
+      <figure>
+        <table class="lightweight-table">
+          <tbody>
+            <tr>
+              <td>
+                <code>a</code>
+              </td>
+              <td>
+                <code>b</code>
+              </td>
+              <td>
+                <code>c</code>
+              </td>
+              <td>
+                <code>d</code>
+              </td>
+              <td>
+                <code>e</code>
+              </td>
+              <td>
+                <code>f</code>
+              </td>
+              <td>
+                <code>g</code>
+              </td>
+              <td>
+                <code>h</code>
+              </td>
+              <td>
+                <code>i</code>
+              </td>
+              <td>
+                <code>j</code>
+              </td>
+              <td>
+                <code>k</code>
+              </td>
+              <td>
+                <code>l</code>
+              </td>
+              <td>
+                <code>m</code>
+              </td>
+              <td>
+                <code>n</code>
+              </td>
+              <td>
+                <code>o</code>
+              </td>
+              <td>
+                <code>p</code>
+              </td>
+              <td>
+                <code>q</code>
+              </td>
+              <td>
+                <code>r</code>
+              </td>
+              <td>
+                <code>s</code>
+              </td>
+              <td>
+                <code>t</code>
+              </td>
+              <td>
+                <code>u</code>
+              </td>
+              <td>
+                <code>v</code>
+              </td>
+              <td>
+                <code>w</code>
+              </td>
+              <td>
+                <code>x</code>
+              </td>
+              <td>
+                <code>y</code>
+              </td>
+              <td>
+                <code>z</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>A</code>
+              </td>
+              <td>
+                <code>B</code>
+              </td>
+              <td>
+                <code>C</code>
+              </td>
+              <td>
+                <code>D</code>
+              </td>
+              <td>
+                <code>E</code>
+              </td>
+              <td>
+                <code>F</code>
+              </td>
+              <td>
+                <code>G</code>
+              </td>
+              <td>
+                <code>H</code>
+              </td>
+              <td>
+                <code>I</code>
+              </td>
+              <td>
+                <code>J</code>
+              </td>
+              <td>
+                <code>K</code>
+              </td>
+              <td>
+                <code>L</code>
+              </td>
+              <td>
+                <code>M</code>
+              </td>
+              <td>
+                <code>N</code>
+              </td>
+              <td>
+                <code>O</code>
+              </td>
+              <td>
+                <code>P</code>
+              </td>
+              <td>
+                <code>Q</code>
+              </td>
+              <td>
+                <code>R</code>
+              </td>
+              <td>
+                <code>S</code>
+              </td>
+              <td>
+                <code>T</code>
+              </td>
+              <td>
+                <code>U</code>
+              </td>
+              <td>
+                <code>V</code>
+              </td>
+              <td>
+                <code>W</code>
+              </td>
+              <td>
+                <code>X</code>
+              </td>
+              <td>
+                <code>Y</code>
+              </td>
+              <td>
+                <code>Z</code>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <code>0</code>
+              </td>
+              <td>
+                <code>1</code>
+              </td>
+              <td>
+                <code>2</code>
+              </td>
+              <td>
+                <code>3</code>
+              </td>
+              <td>
+                <code>4</code>
+              </td>
+              <td>
+                <code>5</code>
+              </td>
+              <td>
+                <code>6</code>
+              </td>
+              <td>
+                <code>7</code>
+              </td>
+              <td>
+                <code>8</code>
+              </td>
+              <td>
+                <code>9</code>
+              </td>
+              <td>
+                <code>_</code>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure></li><li>Let <var>U</var> be an empty set.</li><li>For each character <var>c</var> not in set <var>A</var> where <emu-xref aoid="Canonicalize"><a href="#sec-runtime-semantics-canonicalize-ch">Canonicalize</a></emu-xref>(<var>c</var>) is in <var>A</var>, add <var>c</var> to <var>U</var>.</li><li>Assert: Unless <var>Unicode</var> and <var>IgnoreCase</var> are both <emu-val>true</emu-val>, <var>U</var> is empty.</li><li>Add the characters in set <var>U</var> to set <var>A</var>.</li><li>Return <var>A</var>.
+    </li></ol></emu-alg>
+  </emu-clause>
+  <!-- es6num="21.2.2.6.2" -->
+  <emu-clause id="sec-runtime-semantics-iswordchar-abstract-operation" aoid="IsWordChar">
+    <h1><span class="secnum">3.5.2</span>Runtime Semantics: IsWordChar Abstract Operation<span class="utils"><span class="anchor"><a href="#sec-runtime-semantics-iswordchar-abstract-operation">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+    <p>The abstract operation IsWordChar takes an integer parameter <var>e</var> and performs the following steps:</p>
+    <emu-alg><ol><li>If <var>e</var> is -1 or <var>e</var> is <var>InputLength</var>, return <emu-val>false</emu-val>.</li><li>Let <var>c</var> be the character <var>Input</var>[<var>e</var>].</li><li>Let <var>wordChars</var> be the result of ! <emu-xref aoid="WordCharacters"><a href="#sec-runtime-semantics-wordcharacters-abstract-operation">WordCharacters</a></emu-xref>().</li><li>If <var>c</var> is in <var>wordChars</var>, return <emu-val>true</emu-val>.</li><li>Return <emu-val>false</emu-val>.
+    </li></ol></emu-alg>
+  </emu-clause>
+</emu-clause>
+
+<!-- es6num="21.2.2.8" -->
+<emu-clause id="sec-atom">
+  <h1><span class="secnum">3.6</span>Atom<span class="utils"><span class="anchor"><a href="#sec-atom">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+  <p><ins>With argument <var>direction</var>.</ins></p>
+  <p>The production  <emu-grammar><emu-production name="Atom" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="beff52c4"><emu-nt><a href="#prod-PatternCharacter">PatternCharacter</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Let <var>ch</var> be the character matched by <emu-nt><a href="#prod-PatternCharacter">PatternCharacter</a></emu-nt>.</li><li>Let <var>A</var> be a one-element CharSet containing the character <var>ch</var>.</li><li>Call <emu-xref aoid="CharacterSetMatcher"><a href="#sec-runtime-semantics-charactersetmatcher-abstract-operation">CharacterSetMatcher</a></emu-xref>(<var>A</var>, <emu-val>false</emu-val><ins>, <var>direction</var></ins>) and return its Matcher result.
+  </li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="Atom" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="9658e473"><emu-t>.</emu-t></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Let <var>A</var> be the set of all characters except <emu-nt><a href="https://tc39.github.io/ecma262/#prod-LineTerminator">LineTerminator</a></emu-nt>.</li><li>Call <emu-xref aoid="CharacterSetMatcher"><a href="#sec-runtime-semantics-charactersetmatcher-abstract-operation">CharacterSetMatcher</a></emu-xref>(<var>A</var>, <emu-val>false</emu-val><ins>, <var>direction</var></ins>) and return its Matcher result.
+  </li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="Atom" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="9ce67ea4"><emu-t>\</emu-t><emu-nt><a href="#prod-AtomEscape">AtomEscape</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Return the Matcher that is the result of evaluating <emu-nt><a href="#prod-AtomEscape">AtomEscape</a></emu-nt> <ins>with argument <var>direction</var></ins>.
+  </li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="Atom" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="66aaa8b9"><emu-nt><a href="#prod-CharacterClass">CharacterClass</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-CharacterClass">CharacterClass</a></emu-nt> to obtain a CharSet <var>A</var> and a Boolean <var>invert</var>.</li><li>Call <emu-xref aoid="CharacterSetMatcher"><a href="#sec-runtime-semantics-charactersetmatcher-abstract-operation">CharacterSetMatcher</a></emu-xref>(<var>A</var>, <var>invert</var><ins>, <var>direction</var></ins>) and return its Matcher result.
+  </li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="Atom" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="34eb148f"><emu-t>(</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> <ins>with argument <var>direction</var></ins> to obtain a Matcher <var>m</var>.</li><li>Let <var>parenIndex</var> be the number of left capturing parentheses in the entire regular expression that occur to the left of this production expansion's initial left parenthesis. This is the total number of times the <emu-grammar><emu-production name="Atom" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="34eb148f"><emu-t>(</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production></emu-grammar> production is expanded prior to this production's <emu-nt><a href="#prod-Atom">Atom</a></emu-nt> plus the total number of <emu-grammar><emu-production name="Atom" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="34eb148f"><emu-t>(</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production></emu-grammar> productions enclosing this <emu-nt><a href="#prod-Atom">Atom</a></emu-nt>.</li><li>Return an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps:<ol><li>Let <var>d</var> be an internal Continuation closure that takes one State argument <var>y</var> and performs the following steps:<ol><li>Let <var>cap</var> be a fresh copy of <var>y</var>'s <var>captures</var> <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref>.</li><li>Let <var>xe</var> be <var>x</var>'s <var>endIndex</var>.</li><li>Let <var>ye</var> be <var>y</var>'s <var>endIndex</var>.</li><li><ins>If <var>direction</var> is equal +1, then</ins><ol><li>Let <var>s</var> be a fresh <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> whose characters are the characters of <var>Input</var> at indices <var>xe</var> (inclusive) through <var>ye</var> (exclusive).</li></ol></li><li><ins>Else, <var>direction</var> is equal to -1.</ins><ol><li><ins>Let <var>s</var> be a fresh <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref> whose characters are the characters of <var>Input</var> at indices <var>ye</var> (inclusive) through <var>xe</var> (exclusive).</ins></li></ol></li><li>Set <var>cap</var>[<var>parenIndex</var>+1] to <var>s</var>.</li><li>Let <var>z</var> be the State (<var>ye</var>, <var>cap</var>).</li><li>Call <var>c</var>(<var>z</var>) and return its result.</li></ol></li><li>Call <var>m</var>(<var>x</var>, <var>d</var>) and return its result.
+  </li></ol></li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="Atom" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-Atom">Atom</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="d76db7c5"><emu-t>(</emu-t><emu-t>?</emu-t><emu-t>:</emu-t><emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt><emu-t>)</emu-t></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Return the Matcher that is the result of evaluating <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> <ins>with argument <var>direction</var></ins>.
+  </li></ol></emu-alg>
+
+  <!-- es6num="21.2.2.8.1" -->
+  <emu-clause id="sec-runtime-semantics-charactersetmatcher-abstract-operation" aoid="CharacterSetMatcher">
+    <h1><span class="secnum">3.6.1</span>Runtime Semantics: CharacterSetMatcher Abstract Operation<span class="utils"><span class="anchor"><a href="#sec-runtime-semantics-charactersetmatcher-abstract-operation">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+    <p><ins>With argument <var>direction</var>.</ins></p>
+    <p>The abstract operation CharacterSetMatcher takes  <del>two</del><ins>three</ins> arguments, a CharSet <var>A</var>, a Boolean flag <var>invert</var>  <ins>and an integer <var>direction</var></ins>, and performs the following steps:</p>
+    <emu-alg><ol><li>Return an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps when evaluated:<ol><li>Let <var>e</var> be <var>x</var>'s <var>endIndex</var>.</li><li><ins>Let <var>f</var> be <var>e</var> + <var>direction</var></ins>.</li><li><del>If <var>e</var> is <var>InputLength</var>, return <emu-const>failure</emu-const>.</del></li><li><ins>If <var>f</var> &lt; 0 or <var>f</var> &gt; <var>InputLength</var>, return <emu-const>failure</emu-const>.</ins></li><li><del>Let <var>ch</var> be the character <var>Input</var>[<var>e</var>].</del></li><li><ins>Let <var>index</var> be <emu-xref aoid="min"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">min</a></emu-xref>(<var>e</var>, <var>f</var>).</ins></li><li><ins>Let <var>ch</var> be the character <var>Input</var>[<var>index</var>].</ins>.</li><li>Let <var>cc</var> be <emu-xref aoid="Canonicalize"><a href="#sec-runtime-semantics-canonicalize-ch">Canonicalize</a></emu-xref>(<var>ch</var>).</li><li>If <var>invert</var> is <emu-val>false</emu-val>, then<ol><li>If there does not exist a member <var>a</var> of set <var>A</var> such that <emu-xref aoid="Canonicalize"><a href="#sec-runtime-semantics-canonicalize-ch">Canonicalize</a></emu-xref>(<var>a</var>) is <var>cc</var>, return <emu-const>failure</emu-const>.</li></ol></li><li>Else <var>invert</var> is <emu-val>true</emu-val>,<ol><li>If there exists a member <var>a</var> of set <var>A</var> such that <emu-xref aoid="Canonicalize"><a href="#sec-runtime-semantics-canonicalize-ch">Canonicalize</a></emu-xref>(<var>a</var>) is <var>cc</var>, return <emu-const>failure</emu-const>.</li></ol></li><li>Let <var>cap</var> be <var>x</var>'s <var>captures</var> <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref>.</li><li><del>Let <var>y</var> be the State (<var>e</var>+1, <var>cap</var>).</del></li><li><ins>Let <var>y</var> be the State (<var>f</var>, <var>cap</var>).</ins></li><li>Call <var>c</var>(<var>y</var>) and return its result.
+    </li></ol></li></ol></emu-alg>
+  </emu-clause>
+
+  <!-- es6num="21.2.2.8.2" -->
+  <emu-clause id="sec-runtime-semantics-canonicalize-ch" aoid="Canonicalize">
+    <h1><span class="secnum">3.6.2</span>Runtime Semantics: Canonicalize ( <var>ch</var> )<span class="utils"><span class="anchor"><a href="#sec-runtime-semantics-canonicalize-ch">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+    <p>The abstract operation Canonicalize takes a character parameter <var>ch</var> and performs the following steps:</p>
+    <emu-alg><ol><li>If <var>IgnoreCase</var> is <emu-val>false</emu-val>, return <var>ch</var>.</li><li>If <var>Unicode</var> is <emu-val>true</emu-val>, then<ol><li>If the file CaseFolding.txt of the Unicode Character Database provides a simple or common case folding mapping for <var>ch</var>, return the result of applying that mapping to <var>ch</var>.</li><li>Else, return <var>ch</var>.</li></ol></li><li>Else,<ol><li>Assert: <var>ch</var> is a UTF-16 code unit.</li><li>Let <var>s</var> be the ECMAScript String value consisting of the single code unit <var>ch</var>.</li><li>Let <var>u</var> be the same result produced as if by performing the algorithm for <code>String.prototype.toUpperCase</code> using <var>s</var> as the <emu-val>this</emu-val> value.</li><li>Assert: <var>u</var> is a String value.</li><li>If <var>u</var> does not consist of a single code unit, return <var>ch</var>.</li><li>Let <var>cu</var> be <var>u</var>'s single code unit element.</li><li>If <var>ch</var>'s code unit value ≥ 128 and <var>cu</var>'s code unit value &lt; 128, return <var>ch</var>.</li><li>Return <var>cu</var>.
+    </li></ol></li></ol></emu-alg>
+    <emu-note><span class="note">Note 1</span>
+      <p>Parentheses of the form <code>(</code> <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> <code>)</code> serve both to group the components of the <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> pattern together and to save the result of the match. The result can be used either in a backreference (<code>\</code> followed by a nonzero decimal number), referenced in a replace String, or returned as part of an array from the regular expression matching internal procedure. To inhibit the capturing behaviour of parentheses, use the form <code>(?:</code> <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> <code>)</code> instead.</p>
+    </emu-note>
+    <emu-note><span class="note">Note 2</span>
+      <p>The form <code>(?=</code> <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> <code>)</code> specifies a zero-width positive lookahead. In order for it to succeed, the pattern inside <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> must match at the current position, but the current position is not advanced before matching the sequel. If <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> can match at the current position in several ways, only the first one is tried. Unlike other regular expression operators, there is no backtracking into a <code>(?=</code> form (this unusual behaviour is inherited from Perl). This only matters when the <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> contains capturing parentheses and the sequel of the pattern contains backreferences to those captures.</p>
+      <p>For example,</p>
+      <pre><code class="javascript hljs">/(?=(a+))/.exec(<span class="hljs-string">"baaabac"</span>)</code></pre>
+      <p>matches the empty String immediately after the first <code>b</code> and therefore returns the array:</p>
+      <pre><code class="javascript hljs">[<span class="hljs-string">""</span>, <span class="hljs-string">"aaa"</span>]</code></pre>
+      <p>To illustrate the lack of backtracking into the lookahead, consider:</p>
+      <pre><code class="javascript hljs">/(?=(a+))a*b\<span class="hljs-number">1</span>/.exec(<span class="hljs-string">"baaabac"</span>)</code></pre>
+      <p>This expression returns</p>
+      <pre><code class="javascript hljs">[<span class="hljs-string">"aba"</span>, <span class="hljs-string">"a"</span>]</code></pre>
+      <p>and not:</p>
+      <pre><code class="javascript hljs">[<span class="hljs-string">"aaaba"</span>, <span class="hljs-string">"a"</span>]</code></pre>
+    </emu-note>
+    <emu-note><span class="note">Note 3</span>
+      <p>The form <code>(?!</code> <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> <code>)</code> specifies a zero-width negative lookahead. In order for it to succeed, the pattern inside <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> must fail to match at the current position. The current position is not advanced before matching the sequel. <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> can contain capturing parentheses, but backreferences to them only make sense from within <emu-nt><a href="#prod-Disjunction">Disjunction</a></emu-nt> itself. Backreferences to these capturing parentheses from elsewhere in the pattern always return <emu-val>undefined</emu-val> because the negative lookahead must fail for the pattern to succeed. For example,</p>
+      <pre><code class="javascript hljs">/(.*?)a(?!(a+)b\<span class="hljs-number">2</span>c)\<span class="hljs-number">2</span>(.*)/.exec(<span class="hljs-string">"baaabaac"</span>)</code></pre>
+      <p>looks for an <code>a</code> not immediately followed by some positive number n of <code>a</code>'s, a <code>b</code>, another n <code>a</code>'s (specified by the first <code>\2</code>) and a <code>c</code>. The second <code>\2</code> is outside the negative lookahead, so it matches against <emu-val>undefined</emu-val> and therefore always succeeds. The whole expression returns the array:</p>
+      <pre><code class="javascript hljs">[<span class="hljs-string">"baaabaac"</span>, <span class="hljs-string">"ba"</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-string">"abaac"</span>]</code></pre>
+    </emu-note>
+    <emu-note><span class="note">Note 4</span>
+      <p>In case-insignificant matches when <var>Unicode</var> is <emu-val>true</emu-val>, all characters are implicitly case-folded using the simple mapping provided by the Unicode standard immediately before they are compared. The simple mapping always maps to a single code point, so it does not map, for example, <code>"ß"</code> (U+00DF) to <code>"SS"</code>. It may however map a code point outside the Basic Latin range to a character within, for example, <code>"ſ"</code> (U+017F) to <code>"s"</code>. Such characters are not mapped if <var>Unicode</var> is <emu-val>false</emu-val>. This prevents Unicode code points such as U+017F and U+212A from matching regular expressions such as <code>/[a-z]/i</code>, but they will match <code>/[a-z]/ui</code>.</p>
+    </emu-note>
+  </emu-clause>
+</emu-clause>
+
+<!-- es6num="21.2.2.9" -->
+<emu-clause id="sec-atomescape">
+  <h1><span class="secnum">3.7</span>AtomEscape<span class="utils"><span class="anchor"><a href="#sec-atomescape">link</a></span><span class="anchor"><a href="#" class="utils-pin">pin</a></span></span></h1>
+  <p><ins>With argument <var>direction</var>.</ins></p>
+  <p>The production  <emu-grammar><emu-production name="AtomEscape" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-AtomEscape">AtomEscape</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="7ebff96c"><emu-nt><a href="#prod-DecimalEscape">DecimalEscape</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-DecimalEscape">DecimalEscape</a></emu-nt> to obtain an integer <var>n</var>.</li><li>If <var>n</var>&gt;<var>NcapturingParens</var>, throw a <emu-val>SyntaxError</emu-val> exception.</li><li>Return an internal Matcher closure that takes two arguments, a State <var>x</var> and a Continuation <var>c</var>, and performs the following steps:<ol><li>Let <var>cap</var> be <var>x</var>'s <var>captures</var> <emu-xref href="#sec-list-and-record-specification-type"><a href="https://tc39.github.io/ecma262/#sec-list-and-record-specification-type">List</a></emu-xref>.</li><li>Let <var>s</var> be <var>cap</var>[<var>n</var>].</li><li>If <var>s</var> is <emu-val>undefined</emu-val>, return <var>c</var>(<var>x</var>).</li><li>Let <var>e</var> be <var>x</var>'s <var>endIndex</var>.</li><li>Let <var>len</var> be <var>s</var>'s length.</li><li><del>Let <var>f</var> be <var>e</var>+<var>len</var>.</del></li><li><ins>Let <var>f</var> be <var>e</var> + <var>direction</var>×<var>len</var>.</ins></li><li>If <ins><var>f</var> &lt; 0 or</ins> <var>f</var>&gt;<var>InputLength</var>, return <emu-const>failure</emu-const>.</li><li><ins>Let <var>g</var> be <emu-xref aoid="min"><a href="https://tc39.github.io/ecma262/#sec-algorithm-conventions">min</a></emu-xref>(<var>e</var>, <var>f</var>).</ins></li><li>If there exists an integer <var>i</var> between 0 (inclusive) and <var>len</var> (exclusive) such that <emu-xref aoid="Canonicalize"><a href="#sec-runtime-semantics-canonicalize-ch">Canonicalize</a></emu-xref>(<var>s</var>[<var>i</var>]) is not the same character value as <emu-xref aoid="Canonicalize"><a href="#sec-runtime-semantics-canonicalize-ch">Canonicalize</a></emu-xref>(<var>Input</var>[<del><var>e</var>+<var>i</var></del> <ins><var>g</var>+<var>i</var></ins>]), return <emu-const>failure</emu-const>.</li><li>Let <var>y</var> be the State (<var>f</var>, <var>cap</var>).</li><li>Call <var>c</var>(<var>y</var>) and return its result.
+  </li></ol></li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="AtomEscape" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-AtomEscape">AtomEscape</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="163011be"><emu-nt><a href="#prod-CharacterEscape">CharacterEscape</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-CharacterEscape">CharacterEscape</a></emu-nt> to obtain a character <var>ch</var>.</li><li>Let <var>A</var> be a one-element CharSet containing the character <var>ch</var>.</li><li>Call <emu-xref aoid="CharacterSetMatcher"><a href="#sec-runtime-semantics-charactersetmatcher-abstract-operation">CharacterSetMatcher</a></emu-xref>(<var>A</var>, <emu-val>false</emu-val><ins>, <var>direction</var></ins>) and return its Matcher result.
+  </li></ol></emu-alg>
+  <p>The production  <emu-grammar><emu-production name="AtomEscape" type="lexical" collapsed="" class=" inline">
+    <emu-nt><a href="#prod-AtomEscape">AtomEscape</a></emu-nt><emu-geq>::</emu-geq><emu-rhs a="6f05bee4"><emu-nt><a href="#prod-CharacterClassEscape">CharacterClassEscape</a></emu-nt></emu-rhs>
+</emu-production></emu-grammar> evaluates as follows:</p>
+  <emu-alg><ol><li>Evaluate <emu-nt><a href="#prod-CharacterClassEscape">CharacterClassEscape</a></emu-nt> to obtain a CharSet <var>A</var>.</li><li>Call <emu-xref aoid="CharacterSetMatcher"><a href="#sec-runtime-semantics-charactersetmatcher-abstract-operation">CharacterSetMatcher</a></emu-xref>(<var>A</var>, <emu-val>false</emu-val><ins>, <var>direction</var></ins>) and return its Matcher result.
+  </li></ol></emu-alg>
+  <emu-note><span class="note">Note</span>
+    <p>An escape sequence of the form <code>\</code> followed by a nonzero decimal number <var>n</var> matches the result of the <var>n</var>th set of capturing parentheses (<emu-xref href="#sec-notation"><a href="https://tc39.github.io/ecma262/#sec-notation">21.2.2.1</a></emu-xref>). It is an error if the regular expression has fewer than <var>n</var> capturing parentheses. If the regular expression has <var>n</var> or more capturing parentheses but the <var>n</var>th one is <emu-val>undefined</emu-val> because it has not captured anything, then the backreference always succeeds.</p>
+  </emu-note>
+</emu-clause>
+</emu-import>
+</emu-clause>
+</div></body>
