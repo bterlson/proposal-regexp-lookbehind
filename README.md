@@ -45,3 +45,7 @@ Analogous to the negative lookahead assertion `/(?!.)/` long present in ECMAScri
 ## Draft specification
 
 [specification fragment](https://tc39.github.io/proposal-regexp-lookbehind/) by Thomas Wood and Claude Pache.
+
+## Implementations
+
+* [V8](https://bugs.chromium.org/p/v8/issues/detail?id=4545) with the `--harmony-regexp-lookbehind` flag set
