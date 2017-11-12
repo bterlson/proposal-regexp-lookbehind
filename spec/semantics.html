@@ -548,9 +548,10 @@
         1. Let _cap_ be a fresh copy of _y_'s _captures_ List.
         1. Let _xe_ be _x_'s _endIndex_.
         1. Let _ye_ be _y_'s _endIndex_.
-        1. <ins>If _direction_ is equal +1, then</ins>
+        1. <ins>If _direction_ is equal to +1, then</ins>
           1. Let _s_ be a fresh List whose characters are the characters of _Input_ at indices _xe_ (inclusive) through _ye_ (exclusive).
-        1. <ins>Else, _direction_ is equal to -1.</ins>
+        1. <ins>Else,</ins>
+          1. Assert: _direction_ is equal to -1.</ins>
           1. <ins>Let _s_ be a fresh List whose characters are the characters of _Input_ at indices _ye_ (inclusive) through _xe_ (exclusive).</ins>
         1. Set _cap_[_parenIndex_+1] to _s_.
         1. Let _z_ be the State (_ye_, _cap_).
@@ -565,21 +566,21 @@
   <!-- es6num="21.2.2.8.1" -->
   <emu-clause id="sec-runtime-semantics-charactersetmatcher-abstract-operation" aoid="CharacterSetMatcher">
     <h1>Runtime Semantics: CharacterSetMatcher Abstract Operation</h1>
-    <p><ins>With argument _direction_.</ins></p>
-    <p>The abstract operation CharacterSetMatcher takes <del>two</del><ins>three</ins> arguments, a CharSet _A_, a Boolean flag _invert_ <ins>and an integer _direction_</ins>, and performs the following steps:</p>
+    <p>The abstract operation CharacterSetMatcher takes <del>two</del><ins>three</ins> arguments, a CharSet _A_, a Boolean flag _invert_, <ins>and an integer _direction_</ins>, and performs the following steps:</p>
     <emu-alg>
       1. Return an internal Matcher closure that takes two arguments, a State _x_ and a Continuation _c_, and performs the following steps when evaluated:
         1. Let _e_ be _x_'s _endIndex_.
         1. <ins>Let _f_ be _e_ + _direction_</ins>.
         1. <del>If _e_ is _InputLength_, return ~failure~.</del>
-        1. <ins>If _f_ < 0 or _f_ > _InputLength_, return ~failure~.</ins>
+        1. <ins>If _f_ &lt; 0 or _f_ > _InputLength_, return ~failure~.</ins>
         1. <del>Let _ch_ be the character _Input_[_e_].</del>
         1. <ins>Let _index_ be min(_e_, _f_).</ins>
         1. <ins>Let _ch_ be the character _Input_[_index_].</ins>.
         1. Let _cc_ be Canonicalize(_ch_).
         1. If _invert_ is *false*, then
           1. If there does not exist a member _a_ of set _A_ such that Canonicalize(_a_) is _cc_, return ~failure~.
-        1. Else _invert_ is *true*,
+        1. Else,
+          1. Assert: _invert_ is *true*.
           1. If there exists a member _a_ of set _A_ such that Canonicalize(_a_) is _cc_, return ~failure~.
         1. Let _cap_ be _x_'s _captures_ List.
         1. <del>Let _y_ be the State (_e_+1, _cap_).</del>
