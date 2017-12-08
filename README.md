@@ -48,4 +48,5 @@ Analogous to the negative lookahead assertion `/(?!.)/` long present in ECMAScri
 
 ## Implementations
 
-* [V8](https://bugs.chromium.org/p/v8/issues/detail?id=4545) with the `--harmony-regexp-lookbehind` flag set
+* [V8](https://bugs.chromium.org/p/v8/issues/detail?id=4545), shipping in Chrome 62
+* [Moddable](https://github.com/Moddable-OpenSource/moddable/issues/13)
