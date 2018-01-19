@@ -49,4 +49,4 @@ Analogous to the negative lookahead assertion `/(?!.)/` long present in ECMAScri
 ## Implementations
 
 * [V8](https://bugs.chromium.org/p/v8/issues/detail?id=4545), shipping in Chrome 62
-* [XS](https://github.com/Moddable-OpenSource/moddable/blob/public/xs/sources/xsre.c), in [January 17, 2018 update](http://blog.moddable.tech/blog/january-17-2017-big-update-to-moddable-sdk/)()
+* [XS](https://github.com/Moddable-OpenSource/moddable/blob/public/xs/sources/xsre.c), in [January 17, 2018 update](http://blog.moddable.tech/blog/january-17-2017-big-update-to-moddable-sdk/)
