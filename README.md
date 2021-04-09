@@ -1,5 +1,7 @@
 # RegExp Lookbehind Assertions
 
+![Stage 4](https://badges.aleen42.com/src/tc39_5.svg)
+
 Authors: Gorkem Yakin, Nozomu Katō, Daniel Ehrenberg
 
 Stage 4
